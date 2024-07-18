@@ -8,6 +8,7 @@
 
   <ItemGroup>
     <Folder Include="Contacts\Abstractions\" />
+    <Folder Include="Contacts\Repositories\" />
     <Folder Include="DirectDistanceDialing\" />
   </ItemGroup>
 

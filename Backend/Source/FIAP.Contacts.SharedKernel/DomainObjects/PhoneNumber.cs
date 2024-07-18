@@ -13,7 +13,7 @@ namespace FIAP.Contacts.SharedKernel.DomainObjects
 
         public PhoneNumber(int code, string number)
         {
-            if(!IsValidPhoneCode(code))
+            if(!PhoneCodes.IsCodeValid(code))
                 throw new ArgumentException("Invalid phone code.", nameof(code));
 
             if (!IsValidCellphone(number))
@@ -21,15 +21,7 @@ namespace FIAP.Contacts.SharedKernel.DomainObjects
             
             Code = code;
             Number = number;
-        }
-        
-        private static bool IsValidPhoneCode(int code) 
-        {
-            return PhoneCodes
-                        .ValidCodes
-                        .Values
-                        .Any(codes => codes.Contains(code));
-        } 
+        }       
 
         private static bool IsValidCellphone(string number)
         {
