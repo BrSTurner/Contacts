@@ -2,29 +2,17 @@
 
 namespace FIAP.Contacts.Domain.Contacts.Entities
 {
-    public class Contact : Entity, AggregateRoot
+    public class Contact : Entity, IAggregateRoot
     {
-        private string _name;
-
-        public string Name 
-        { 
-            get
-            {
-                return _name;
-            } 
-            private set 
-            {
-                ValidateName(value);
-                _name = value;
-            } 
-        }
-
+        public string Name { get; set; }
         public Email Email { get; private set; }
         public PhoneNumber PhoneNumber { get; private set; }
 
         public Contact(string name, Email email, PhoneNumber phoneNumber)
         {
-            Name = name;         
+            ValidateName(name);
+
+            Name = name;            
             Email = email;
             PhoneNumber = phoneNumber;
         }
@@ -48,7 +36,8 @@ namespace FIAP.Contacts.Domain.Contacts.Entities
         {
             if (Name.Equals(name))
                 return;
-
+            
+            ValidateName(name);
             Name = name;                    
         }
 
