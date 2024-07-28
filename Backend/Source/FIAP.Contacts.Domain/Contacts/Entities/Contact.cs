@@ -25,6 +25,13 @@ namespace FIAP.Contacts.Domain.Contacts.Entities
             return new Contact(name, address, phone);            
         }
 
+        public void Update(Contact contact)
+        {
+            UpdateName(contact.Name);
+            UpdateEmail(contact.Email.Address);
+            UpdatePhoneNumber(contact.PhoneNumber.Code, contact.PhoneNumber.Number);
+        }
+
         public void Update(string name, string email, int phoneCode, string phoneNumber)
         {
             UpdateName(name);

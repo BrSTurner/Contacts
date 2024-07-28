@@ -25,7 +25,7 @@ namespace FIAP.Contacts.Infrastructure.Repositories
             get
             {
                 return _context.Database.GetDbConnection();
-            }
+            }           
         }
 
         public void Add(TEntity entity) => _entity.Add(entity);
