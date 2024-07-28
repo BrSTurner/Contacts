@@ -8,6 +8,16 @@ namespace FIAP.Contacts.Infrastructure.Contacts.Repositories
     {
         public ContactRepository(FIAPContext context) : base(context)
         {
+            public Task<Contact> FilterByPhoneCode(PhoneNumber phoneNumber)
+            {
+                using (var connection = new SqlConnection(connectionString))
+                {
+                    string sql = "SELECT * FROM Contacts WHERE phoneNumber = @PhoneNumber";
+
+                    var contacts = connection.Query<Contact>(sql, new { PhoneNumber = phoneNumber }).ToList();
+                    return contacts;    
+                }
+            }
         }
 
     }
