@@ -26,20 +26,20 @@ namespace FIAP.Contacts.Domain.Contacts.Services
             await _unitOfWork.CommitAsync();
         }
 
-        public async Task<List<Contact>> FilterByPhoneCode(int phoneCode)
-        {
-            _contactRepository
-        }
+        //public async Task<List<Contact>> FilterByPhoneCode(int phoneCode)
+        //{
+        //    _contactRepository
+        //}
 
-        public async Task<Contact> Get(Guid contactId)
-        {
-           return _contactRepository.GetByIdAsync(contactId).Result;
-        }
+        //public async Task<Contact> Get(Guid contactId)
+        //{
+        //    return _contactRepository.GetByIdAsync(contactId);
+        //}
 
-        public async Task<List<Contact>> GetAll()
-        {
-            return _contactRepository.GetAllAsync<Contact>();
-        }
+        //public async Task<List<Contact>> GetAll()
+        //{
+        //    return _contactRepository.GetAllAsync<Contact>();
+        //}
 
         public async Task Update(Guid contactId, Contact contact)
         {

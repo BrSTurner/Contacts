@@ -1,6 +1,4 @@
 ﻿using FIAP.Contacts.Domain.Contacts.Entities;
-using FIAP.Contacts.SharedKernel.DomainObjects;
-using FIAP.Contacts.SharedKernel.Enumerations;
 
 namespace FIAP.Contacts.Domain.Contacts.Services
 {
