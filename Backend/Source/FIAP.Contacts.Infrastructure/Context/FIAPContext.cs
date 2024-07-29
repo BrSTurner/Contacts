@@ -10,9 +10,16 @@ namespace FIAP.Contacts.Infrastructure.Context
         }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.ApplyConfiguration(new ContactMapping());
-
             base.OnModelCreating(modelBuilder);
+            modelBuilder.ApplyConfiguration(new ContactMapping());            
         }
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            if (!optionsBuilder.IsConfigured)
+            {
+                optionsBuilder.UseInMemoryDatabase("FiapContacts");
+            }
+        }
+
     }
 }

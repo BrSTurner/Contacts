@@ -8,6 +8,8 @@ namespace FIAP.Contacts.Domain.Contacts.Entities
         public Email Email { get; private set; }
         public PhoneNumber PhoneNumber { get; private set; }
 
+        protected Contact() { }
+
         public Contact(string name, Email email, PhoneNumber phoneNumber)
         {
             ValidateName(name);

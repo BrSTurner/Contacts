@@ -2,7 +2,7 @@
 
 namespace FIAP.Contacts.SharedKernel.DomainObjects
 {
-    public record class Email
+    public class Email
     {
         [EmailAddress(ErrorMessage = "Invalid email address format.")]
         public string Address { get; init; }
@@ -24,5 +24,39 @@ namespace FIAP.Contacts.SharedKernel.DomainObjects
         }
 
         public override string ToString() => Address;
+
+        public override bool Equals(object obj)
+        {
+            if (obj is Email other)
+            {
+                return Equals(other);
+            }
+            return false;
+        }
+
+        public bool Equals(Email other)
+        {
+            if (other is null)
+            {
+                return false;
+            }
+
+            return Address == other.Address;
+        }
+
+        public override int GetHashCode()
+        {
+            return Address != null ? Address.GetHashCode() : 0;
+        }
+
+        public static bool operator ==(Email left, Email right)
+        {
+            return Equals(left, right);
+        }
+
+        public static bool operator !=(Email left, Email right)
+        {
+            return !Equals(left, right);
+        }
     }
 }

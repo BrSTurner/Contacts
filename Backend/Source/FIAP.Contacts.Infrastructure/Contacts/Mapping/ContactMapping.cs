@@ -23,6 +23,8 @@ namespace FIAP.Contacts.Infrastructure.Contacts.Mapping
                     .IsRequired();
             });
 
+           
+
             builder.OwnsOne(x => x.PhoneNumber, phoneBuilder =>
             {
                 phoneBuilder.Property(p => p.Code)

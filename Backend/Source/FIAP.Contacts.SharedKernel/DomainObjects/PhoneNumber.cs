@@ -4,7 +4,7 @@ using System.Text.RegularExpressions;
 
 namespace FIAP.Contacts.SharedKernel.DomainObjects
 {
-    public record PhoneNumber
+    public class PhoneNumber
     {
         [RegularExpression(@"^[9]\d{8}$", ErrorMessage = "Invalid cellphone number format. It must be a 9-digit number starting with 9.")]
         public string Number { get; init; }
@@ -29,6 +29,30 @@ namespace FIAP.Contacts.SharedKernel.DomainObjects
             return regex.IsMatch(number);
         }
 
-        public override string ToString() => Number;
+        public override bool Equals(object obj)
+        {
+            if (obj == null || GetType() != obj.GetType())
+                return false;
+
+            var other = (PhoneNumber)obj;
+            return Code == other.Code && Number == other.Number;
+        }
+
+        public override int GetHashCode()
+        {
+            return HashCode.Combine(Code, Number);
+        }
+
+        public static bool operator ==(PhoneNumber left, PhoneNumber right)
+        {
+            return Equals(left, right);
+        }
+
+        public static bool operator !=(PhoneNumber left, PhoneNumber right)
+        {
+            return !Equals(left, right);
+        }
+
+        public override string ToString() => $"({Code}) {Number}";
     }
 }

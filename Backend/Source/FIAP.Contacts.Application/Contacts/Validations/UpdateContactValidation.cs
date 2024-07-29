@@ -4,7 +4,7 @@ using FluentValidation;
 
 namespace FIAP.Contacts.Application.Contacts.Validations
 {
-    public class UpdateContactValidation : AbstractValidator<ContactInput>
+    public class UpdateContactValidation : AbstractValidator<UpdateContactInput>
     {
         public UpdateContactValidation()
         {

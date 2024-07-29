@@ -9,9 +9,19 @@ namespace FIAP.Contacts.Application.Contacts.Pofiles
     {
         public ContactProfile()
         {
-            CreateMap<ContactInput, Contact>()
-                .ForMember(e => e.Email, opt => opt.MapFrom(src => new Email(src.Email)))
-                .ForMember(e => e.PhoneNumber, opt => opt.MapFrom(src => new PhoneNumber(src.PhoneCode, src.PhoneNumber)));
+            CreateMap<CreateContactInput, Contact>()
+                .ForCtorParam("name", opt => opt.MapFrom(src => src.Name))
+                .ForCtorParam("email", opt => opt.MapFrom(src => new Email(src.Email)))
+                .ForCtorParam("phoneNumber", opt => opt.MapFrom(src => new PhoneNumber(src.PhoneCode, src.PhoneNumber)));
+                //.ForMember(e => e.Email, opt => opt.MapFrom(src => new Email(src.Email)))
+                //.ForMember(e => e.PhoneNumber, opt => opt.MapFrom(src => new PhoneNumber(src.PhoneCode, src.PhoneNumber)));
+
+            CreateMap<UpdateContactInput, Contact>()
+                .ForCtorParam("name", opt => opt.MapFrom(src => src.Name))
+                .ForCtorParam("email", opt => opt.MapFrom(src => new Email(src.Email)))
+                .ForCtorParam("phoneNumber", opt => opt.MapFrom(src => new PhoneNumber(src.PhoneCode, src.PhoneNumber)));
+             //.ForMember(e => e.Email, opt => opt.MapFrom(src => new Email(src.Email)))
+             //.ForMember(e => e.PhoneNumber, opt => opt.MapFrom(src => new PhoneNumber(src.PhoneCode, src.PhoneNumber)));
 
             CreateMap<Contact, ContactDTO>()
               .ForMember(e => e.Email, opt => opt.MapFrom(src => src.Email.Address))

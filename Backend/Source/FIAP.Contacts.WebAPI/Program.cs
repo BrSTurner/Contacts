@@ -1,3 +1,6 @@
+using FIAP.Contacts.Application.Contacts.Models;
+using FIAP.Contacts.Application.Contacts.Pofiles;
+using FIAP.Contacts.Application.Contacts.Services;
 using FIAP.Contacts.Application.Extensions;
 using FIAP.Contacts.Domain.Contacts.Services;
 using FIAP.Contacts.Infrastructure.Extensions;
@@ -7,6 +10,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+builder.Services.AddAutoMapper(typeof(ContactProfile));
 builder.Services.AddScoped<IContactService, ContactService>();
 builder.Services.AddInfrastructure();
 builder.Services.AddApplication();
@@ -21,25 +25,40 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
+var endpointGroup = app.MapGroup("Contacts");
 
-app.MapPost("/contacts", async (Contact contact, IContactService contactService) =>
+endpointGroup.MapPost("/contacts", async (CreateContactInput contact, IContactAppService contactService) =>
 {
-    await contactService.Create(contact);
+    var contactId = await contactService.CreateAsync(contact);
+    return Results.Created($"/{contactId}", contactId);
 
-    return Results.Created();
-}).WithName("CreateContact");
+})
+.WithTags("Contacts")
+.WithName("Create Contact");
 
-app.MapPut("/contacts", async (Guid contactId, Contact contact, IContactService contactService) =>
+endpointGroup.MapPut("/contacts/{contactId:guid}", async (Guid contactId, UpdateContactInput contact, IContactAppService contactService) =>
 {
-    await contactService.Update(contactId, contact);
+    var updatedContact = await contactService.UpdateAsync(contactId, contact);
+    return Results.Ok(updatedContact);
 
-    return Results.Ok();
-}).WithName("UpdateContact");
+})
+.WithTags("Contacts")
+.WithName("Update Contact");
 
-app.MapGet("/contacts", async (IContactService contactService) =>
-    await contactService.GetAll().WithName("GetContacts"));
+endpointGroup.MapDelete("/contacts/{contactId:guid}", async (Guid contactId, IContactAppService contactService) =>
+{
+    var result = await contactService.DeleteAsync(contactId);
+    return Results.Ok(result);
 
-app.MapGet("/contacts/{id}", async (Guid contactId, IContactService contactService) =>
-    await contactService.Get(contactId).WithName("GetContact"));
+})
+.WithTags("Contacts")
+.WithName("Delete Contact");
+
+
+//endpointGroup.MapGet("/contacts", async (IContactAppService contactService) =>
+//    await contactService.GetAll().WithName("GetContacts"));
+
+//endpointGroup.MapGet("/contacts/{id}", async (Guid contactId, IContactAppService contactService) =>
+//    await contactService.Get(contactId).WithName("GetContact"));
 
 app.Run();

@@ -20,32 +20,32 @@ namespace FIAP.Contacts.Application.Contacts.Services
             _mapper = mapper;  
         }
 
-        public async Task<Guid> CreateAsync(ContactInput contact)
+        public async Task<Guid> CreateAsync(CreateContactInput contact)
         {
             EnsureContactInputIsValid(contact);
 
-            await EnsureValidationAsync<ContactInput, CreateContactValidation>(contact);
+            await EnsureValidationAsync<CreateContactInput, CreateContactValidation>(contact);
 
             return await _contactService.CreateAsync(_mapper.Map<Contact>(contact));
         }
 
-        public async Task<bool> DeleteAsync(Guid contactId)
-        {
-            if(contactId.Equals(Guid.Empty))
-                throw new ArgumentNullException(nameof(contactId), "Contact Id must be correctly filled");
-
-            return await _contactService.DeleteAsync(contactId);
-        }
-
-        public async Task<ContactDTO> UpdateAsync(Guid contactId, ContactInput contact)
+        public async Task<ContactDTO> UpdateAsync(Guid contactId, UpdateContactInput contact)
         {
             EnsureContactInputIsValid(contact);
 
-            await EnsureValidationAsync<ContactInput, UpdateContactValidation>(contact);
+            await EnsureValidationAsync<UpdateContactInput, UpdateContactValidation>(contact);
 
             var updatedContact = await _contactService.UpdateAsync(contactId, _mapper.Map<Contact>(contact));
 
             return _mapper.Map<ContactDTO>(updatedContact);
+        }
+
+        public async Task<bool> DeleteAsync(Guid contactId)
+        {
+            if (contactId.Equals(Guid.Empty))
+                throw new ArgumentNullException(nameof(contactId), "Contact Id must be correctly filled");
+
+            return await _contactService.DeleteAsync(contactId);
         }
 
         private void EnsureContactInputIsValid(ContactInput contact)

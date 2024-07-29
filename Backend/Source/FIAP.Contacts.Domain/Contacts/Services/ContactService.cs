@@ -22,7 +22,7 @@ namespace FIAP.Contacts.Domain.Contacts.Services
         {
             ValidateContact(contact);
 
-            if(IsContactAlreadyRegistered(contact))
+            if(await IsContactAlreadyRegistered(contact))
                 throw new ExistingContactException();
 
             _contactRepository.Add(contact);
@@ -83,9 +83,9 @@ namespace FIAP.Contacts.Domain.Contacts.Services
             throw new DomainException("Contact could not be deleted");
         }
 
-        private bool IsContactAlreadyRegistered(Contact contact)
+        private async Task<bool> IsContactAlreadyRegistered(Contact contact)
         {
-            var existentContact = _contactRepository.GetByEmailOrPhoneNumber(contact.Email, contact.PhoneNumber);
+            var existentContact = await _contactRepository.GetByEmailOrPhoneNumber(contact.Email, contact.PhoneNumber);
             return existentContact != null;
         }
 
