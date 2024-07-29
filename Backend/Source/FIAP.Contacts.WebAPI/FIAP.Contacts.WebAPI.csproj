@@ -14,6 +14,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\FIAP.Contacts.Application\FIAP.Contacts.Application.csproj" />
     <ProjectReference Include="..\FIAP.Contacts.Domain\FIAP.Contacts.Domain.csproj" />
     <ProjectReference Include="..\FIAP.Contacts.Infrastructure\FIAP.Contacts.Infrastructure.csproj" />
   </ItemGroup>

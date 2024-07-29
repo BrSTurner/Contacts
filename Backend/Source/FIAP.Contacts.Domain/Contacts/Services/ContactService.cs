@@ -1,5 +1,6 @@
 ﻿using FIAP.Contacts.Domain.Contacts.Entities;
 using FIAP.Contacts.Domain.Contacts.Repositories;
+using FIAP.Contacts.SharedKernel.Exceptions;
 using FIAP.Contacts.SharedKernel.UoW;
 
 namespace FIAP.Contacts.Domain.Contacts.Services
@@ -17,13 +18,19 @@ namespace FIAP.Contacts.Domain.Contacts.Services
             _unitOfWork = unitOfWork;
         }
 
-        public async Task Create(Contact contact)
+        public async Task<Guid> CreateAsync(Contact contact)
         {
             ValidateContact(contact);
 
+            if(IsContactAlreadyRegistered(contact))
+                throw new ExistingContactException();
+
             _contactRepository.Add(contact);
 
-            await _unitOfWork.CommitAsync();
+            if (await _unitOfWork.CommitAsync())
+                return contact.Id;
+
+            throw new Exception("Contact could not be created");
         }
 
         //public async Task<List<Contact>> FilterByPhoneCode(int phoneCode)
@@ -41,7 +48,7 @@ namespace FIAP.Contacts.Domain.Contacts.Services
         //    return _contactRepository.GetAllAsync<Contact>();
         //}
 
-        public async Task Update(Guid contactId, Contact contact)
+        public async Task<Contact> UpdateAsync(Guid contactId, Contact contact)
         {
             ValidateContact(contact);
             ValidateContactId(contactId);
@@ -49,16 +56,37 @@ namespace FIAP.Contacts.Domain.Contacts.Services
             var currentContact = await _contactRepository.GetByIdAsync(contactId);
 
             if (currentContact == null)
-                throw new KeyNotFoundException("Contact could not be found");
+                throw new EntityNotFoundException("Contact could not be found");
 
-            currentContact.Update(
-                contact.Name, 
-                contact.Email.Address, 
-                contact.PhoneNumber.Code, 
-                contact.PhoneNumber.Number
-            );
+            currentContact.Update(contact);
 
-            await _unitOfWork.CommitAsync();
+            if (await _unitOfWork.CommitAsync())
+                return currentContact;
+
+            throw new DomainException("Contact could not be updated");
+        }
+
+        public async Task<bool> DeleteAsync(Guid contactId)
+        {
+            ValidateContactId(contactId);
+
+            var currentContact = await _contactRepository.GetByIdAsync(contactId);
+
+            if (currentContact == null)
+                throw new EntityNotFoundException("Contact could not be found");
+
+            _contactRepository.Remove(currentContact);
+
+            if (await _unitOfWork.CommitAsync())
+                return true;
+
+            throw new DomainException("Contact could not be deleted");
+        }
+
+        private bool IsContactAlreadyRegistered(Contact contact)
+        {
+            var existentContact = _contactRepository.GetByEmailOrPhoneNumber(contact.Email, contact.PhoneNumber);
+            return existentContact != null;
         }
 
         private void ValidateContact(Contact contact)
