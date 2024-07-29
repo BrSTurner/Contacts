@@ -32,6 +32,7 @@ namespace FIAP.Contacts.Domain.Contacts.Entities
             UpdateName(contact.Name);
             UpdateEmail(contact.Email.Address);
             UpdatePhoneNumber(contact.PhoneNumber.Code, contact.PhoneNumber.Number);
+            SetUpdatedDate();
         }
 
         public void Update(string name, string email, int phoneCode, string phoneNumber)
@@ -39,6 +40,7 @@ namespace FIAP.Contacts.Domain.Contacts.Entities
             UpdateName(name);
             UpdateEmail(email);
             UpdatePhoneNumber(phoneCode, phoneNumber);
+            SetUpdatedDate();
         }
 
         public void UpdateName(string name)
@@ -72,6 +74,9 @@ namespace FIAP.Contacts.Domain.Contacts.Entities
                 throw new ArgumentNullException(nameof(Name), "Name must be filled");
         }
 
-
+        private void SetUpdatedDate()
+        {
+            UpdatedAt = DateTime.Now;
+        }
     }
 }

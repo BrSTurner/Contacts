@@ -4,6 +4,8 @@ using FIAP.Contacts.Application.Contacts.Services;
 using FIAP.Contacts.Application.Extensions;
 using FIAP.Contacts.Domain.Contacts.Services;
 using FIAP.Contacts.Infrastructure.Extensions;
+using FIAP.Contacts.WebAPI.Filters;
+using Microsoft.AspNetCore.Diagnostics;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -25,7 +27,8 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-var endpointGroup = app.MapGroup("Contacts");
+var endpointGroup = app
+    .MapGroup("Contacts");
 
 endpointGroup.MapPost("/contacts", async (CreateContactInput contact, IContactAppService contactService) =>
 {
@@ -60,5 +63,8 @@ endpointGroup.MapDelete("/contacts/{contactId:guid}", async (Guid contactId, ICo
 
 //endpointGroup.MapGet("/contacts/{id}", async (Guid contactId, IContactAppService contactService) =>
 //    await contactService.Get(contactId).WithName("GetContact"));
+
+
+app.UseContactsExceptionFilter();
 
 app.Run();

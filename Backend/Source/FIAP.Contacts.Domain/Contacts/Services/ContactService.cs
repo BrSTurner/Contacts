@@ -30,7 +30,7 @@ namespace FIAP.Contacts.Domain.Contacts.Services
             if (await _unitOfWork.CommitAsync())
                 return contact.Id;
 
-            throw new Exception("Contact could not be created");
+            throw new DomainException("Contact could not be created");
         }
 
         //public async Task<List<Contact>> FilterByPhoneCode(int phoneCode)

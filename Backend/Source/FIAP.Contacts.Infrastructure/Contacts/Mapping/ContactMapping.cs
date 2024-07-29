@@ -16,14 +16,15 @@ namespace FIAP.Contacts.Infrastructure.Contacts.Mapping
                 .HasMaxLength(200)
                 .IsRequired();
 
+            builder.Property(x => x.CreatedAt);
+            builder.Property(x => x.UpdatedAt);
+
             builder.OwnsOne(x => x.Email, emailBuilder =>
             {
                 emailBuilder.Property(e => e.Address)
                     .HasColumnName("Email")
                     .IsRequired();
             });
-
-           
 
             builder.OwnsOne(x => x.PhoneNumber, phoneBuilder =>
             {
