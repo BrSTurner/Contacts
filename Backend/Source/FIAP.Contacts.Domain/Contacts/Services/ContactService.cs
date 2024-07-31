@@ -92,13 +92,13 @@ namespace FIAP.Contacts.Domain.Contacts.Services
         private void ValidateContact(Contact contact)
         {
             if (contact == null)
-                throw new ArgumentNullException("Contact must be filled");
+                throw new ArgumentNullException(nameof(contact), "Contact must be filled");
         }
 
         private void ValidateContactId(Guid contactId)
         {
             if (contactId.Equals(Guid.Empty))
-                throw new ArgumentNullException("Contact Identifier must be correctly filled");
+                throw new ArgumentNullException(nameof(contactId), "Contact Identifier must be correctly filled");
         }
     }
 }
