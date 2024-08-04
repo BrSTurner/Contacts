@@ -35,15 +35,9 @@ namespace FIAP.Contacts.Application.Contacts.Services
             return _mapper.Map<List<ContactDTO>>(contacts);
         }
 
-        public async Task<ContactDTO> GetByIdAsync(Guid id)
+        public async Task<List<ContactDTO>> GetByPhoneCodeAsync(int phoneCode)
         {
-            var contact = await _contactService.GetByIdAsync(id);
-            return _mapper.Map<ContactDTO>(contact);
-        }
-
-        public List<ContactDTO> FilterByPhoneCodeAsync(int phoneCode)
-        {
-            var contacts = _contactService.FilterByPhoneCodeAsync(phoneCode);
+            var contacts = await _contactService.GetByPhoneCodeAsync(phoneCode);
             return _mapper.Map<List<ContactDTO>>(contacts);
         }
 

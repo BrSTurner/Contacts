@@ -60,20 +60,13 @@ endpointGroup.MapGet("/contacts", async (IContactAppService contactService) =>
     var result = await contactService.GetAllAsync();
     return Results.Ok(result);
 
-}).WithTags("Contacts").WithName("GetAllContacts");
+}).WithTags("Contacts").WithName("Get All Contacts");
 
-endpointGroup.MapGet("/contacts/{id:guid}", async (Guid contactId, IContactAppService contactService) =>
+endpointGroup.MapGet("/contacts/{phoneCode:int}", async (int phoneCode, IContactAppService contactService) =>
 {
-    var result = await contactService.GetByIdAsync(contactId);
+    var result = await contactService.GetByPhoneCodeAsync(phoneCode);
     return Results.Ok(result);
 
-}).WithTags("Contacts").WithName("GetContactById");
-
-endpointGroup.MapGet("/contacts/Filter/{phoneCode:int}", (int phoneCode, IContactAppService contactService) =>
-{
-    var result = contactService.FilterByPhoneCodeAsync(phoneCode);
-    return Results.Ok(result);
-
-}).WithTags("Contacts").WithName("FilterContactByPhoneCode");
+}).WithTags("Contacts").WithName("Get Contact By Phone Code");
 
 app.Run();

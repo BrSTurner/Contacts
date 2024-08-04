@@ -15,17 +15,15 @@ namespace FIAP.Contacts.Infrastructure.Contacts.Repositories
 
         }
 
-        //TODO 
-        //Change the query to filter by the PhoneNumber Code field
-        public List<Contact> FilterByPhoneCode(int phoneCode)
+        public async Task<List<Contact>> GetByPhoneCode(int phoneCode)
         {
             var sql = "SELECT * FROM Contacts WHERE phoneCode = @PhoneCode";
 
-            //var result = DbConnection.QueryAsync<Contact>(sql, new { PhoneCode = phoneCode });
+            var result = await DbConnection.QueryAsync<Contact>(sql, new { PhoneCode = phoneCode });
 
-            var entity = _entity.Where(x => x.PhoneNumber.Code.Equals(phoneCode)).ToList();
+            //var entity = _entity.Where(x => x.PhoneNumber.Code.Equals(phoneCode)).ToList();
 
-            return entity;
+            return result.ToList();
         }
 
         public Task<Contact?> GetByEmailOrPhoneNumber(Email email, PhoneNumber phoneNumber)

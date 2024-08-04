@@ -33,19 +33,9 @@ namespace FIAP.Contacts.Domain.Contacts.Services
             throw new Exception("Contact could not be created");
         }
 
-        public List<Contact> FilterByPhoneCodeAsync(int phoneCode)
+        public async Task<List<Contact>> GetByPhoneCodeAsync(int phoneCode)
         {
-            return _contactRepository.FilterByPhoneCode(phoneCode);
-        }
-
-        public async Task<Contact> GetByIdAsync(Guid contactId)
-        {
-            var contact = await _contactRepository.GetByIdAsync(contactId);
-
-            if (contact == null)
-                throw new ArgumentNullException("Contact not found!");
-
-            return contact;
+            return await _contactRepository.GetByPhoneCode(phoneCode);
         }
 
         public async Task<List<Contact>> GetAllAsync()
