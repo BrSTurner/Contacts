@@ -2,7 +2,6 @@
 using FIAP.Contacts.SharedKernel.DomainObjects;
 using FIAP.Contacts.SharedKernel.Repositories;
 using Microsoft.EntityFrameworkCore;
-using System.Data.Common;
 
 namespace FIAP.Contacts.Infrastructure.Repositories
 {
@@ -18,14 +17,6 @@ namespace FIAP.Contacts.Infrastructure.Repositories
         {
             _context = context;
             _entity = _context.Set<TEntity>();  
-        }
-
-        protected DbConnection DbConnection
-        {
-            get
-            {
-                return _context.Database.GetDbConnection();
-            }           
         }
 
         public void Add(TEntity entity) => _entity.Add(entity);

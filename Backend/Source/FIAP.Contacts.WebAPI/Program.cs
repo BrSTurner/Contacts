@@ -6,6 +6,7 @@ using FIAP.Contacts.Domain.Contacts.Services;
 using FIAP.Contacts.Infrastructure.Extensions;
 using FIAP.Contacts.WebAPI.Filters;
 using Microsoft.AspNetCore.Diagnostics;
+using Microsoft.AspNetCore.Http.HttpResults;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -14,7 +15,7 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddAutoMapper(typeof(ContactProfile));
 builder.Services.AddScoped<IContactService, ContactService>();
-builder.Services.AddInfrastructure();
+builder.Services.AddInfrastructure(builder.Configuration);
 builder.Services.AddApplication();
 
 var app = builder.Build();
@@ -37,7 +38,9 @@ endpointGroup.MapPost("/contacts", async (CreateContactInput contact, IContactAp
 
 })
 .WithTags("Contacts")
-.WithName("Create Contact");
+.WithName("Create Contact")
+.Produces<Created<Guid>>()
+.Produces<BadRequest>();
 
 endpointGroup.MapPut("/contacts/{contactId:guid}", async (Guid contactId, UpdateContactInput contact, IContactAppService contactService) =>
 {
@@ -46,7 +49,10 @@ endpointGroup.MapPut("/contacts/{contactId:guid}", async (Guid contactId, Update
 
 })
 .WithTags("Contacts")
-.WithName("Update Contact");
+.WithName("Update Contact")
+.Produces<Ok>()
+.Produces<NotFound>()
+.Produces<BadRequest>();
 
 endpointGroup.MapDelete("/contacts/{contactId:guid}", async (Guid contactId, IContactAppService contactService) =>
 {
@@ -55,22 +61,41 @@ endpointGroup.MapDelete("/contacts/{contactId:guid}", async (Guid contactId, ICo
 
 })
 .WithTags("Contacts")
-.WithName("Delete Contact");
+.WithName("Delete Contact")
+.Produces<Ok>()
+.Produces<NotFound>()
+.Produces<BadRequest>();
 
 
 endpointGroup.MapGet("/contacts", async (IContactAppService contactService) =>
 {
     var result = await contactService.GetAllAsync();
+    
+    if (result == null || !result.Any())
+        return Results.NoContent();
+
     return Results.Ok(result);
 
-}).WithTags("Contacts").WithName("Get All Contacts");
+})
+.WithTags("Contacts")
+.WithName("Get All Contacts")
+.Produces<Ok>()
+.Produces<NoContent>();
 
 endpointGroup.MapGet("/contacts/{phoneCode:int}", async (int phoneCode, IContactAppService contactService) =>
 {
     var result = await contactService.GetByPhoneCodeAsync(phoneCode);
+
+    if(result == null || !result.Any())
+        return Results.NoContent();
+
     return Results.Ok(result);
 
-}).WithTags("Contacts").WithName("Get Contact By Phone Code");
+})
+.WithTags("Contacts")
+.WithName("Get Contact By Phone Code")
+.Produces<Ok>()
+.Produces<NoContent>();
 
 
 app.UseContactsExceptionFilter();

@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using FIAP.Contacts.Application.Contacts.Models;
+using FIAP.Contacts.Application.Contacts.Queries;
 using FIAP.Contacts.Application.Contacts.Validations;
 using FIAP.Contacts.Application.Services;
 using FIAP.Contacts.Domain.Contacts.Entities;
@@ -10,13 +11,16 @@ namespace FIAP.Contacts.Application.Contacts.Services
     public sealed class ContactAppService : BaseAppService, IContactAppService
     {
         private IContactService _contactService;
+        private IContactQueries _contactQueries;
         private IMapper _mapper;
 
         public ContactAppService(
             IContactService contactService,
-            IMapper mapper) 
+            IMapper mapper,
+            IContactQueries contactQueries) 
         {
             _contactService = contactService;   
+            _contactQueries = contactQueries;
             _mapper = mapper;  
         }
 
@@ -37,8 +41,7 @@ namespace FIAP.Contacts.Application.Contacts.Services
 
         public async Task<List<ContactDTO>> GetByPhoneCodeAsync(int phoneCode)
         {
-            var contacts = await _contactService.GetByPhoneCodeAsync(phoneCode);
-            return _mapper.Map<List<ContactDTO>>(contacts);
+            return await _contactQueries.GetByPhoneCodeAsync(phoneCode);
         }
 
         public async Task<ContactDTO> UpdateAsync(Guid contactId, UpdateContactInput contact)

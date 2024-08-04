@@ -33,11 +33,6 @@ namespace FIAP.Contacts.Domain.Contacts.Services
             throw new DomainException("Contact could not be created");
         }
 
-        public async Task<List<Contact>> GetByPhoneCodeAsync(int phoneCode)
-        {
-            return await _contactRepository.GetByPhoneCode(phoneCode);
-        }
-
         public async Task<List<Contact>> GetAllAsync()
         {
             return await _contactRepository.GetAllAsync();

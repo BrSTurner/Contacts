@@ -1,5 +1,4 @@
 ﻿using FIAP.Contacts.Domain.Contacts.Entities;
-using FIAP.Contacts.SharedKernel.DomainObjects;
 
 namespace FIAP.Contacts.Domain.Contacts.Services
 {
@@ -8,7 +7,6 @@ namespace FIAP.Contacts.Domain.Contacts.Services
         Task<Guid> CreateAsync(Contact contact);
         Task<Contact> UpdateAsync(Guid contactId, Contact contact);
         Task<bool> DeleteAsync(Guid contactId);
-        Task<List<Contact>> GetByPhoneCodeAsync(int phoneCode);
         Task<List<Contact>> GetAllAsync();
     }
 }

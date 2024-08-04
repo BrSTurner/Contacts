@@ -7,6 +7,5 @@ namespace FIAP.Contacts.Domain.Contacts.Repositories
     public interface IContactRepository : IBaseRepository<Contact>
     {
         Task<Contact?> GetByEmailOrPhoneNumber(Email email, PhoneNumber phoneNumber);
-        Task<List<Contact>> GetByPhoneCode(int phoneCode);
     }
 }
