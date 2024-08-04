@@ -1,11 +1,10 @@
-﻿using FIAP.Contacts.Domain.Contacts.Entities;
+﻿using Dapper;
+using FIAP.Contacts.Domain.Contacts.Entities;
 using FIAP.Contacts.Domain.Contacts.Repositories;
 using FIAP.Contacts.Infrastructure.Context;
 using FIAP.Contacts.Infrastructure.Repositories;
 using FIAP.Contacts.SharedKernel.DomainObjects;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Data.SqlClient;
-using Dapper;
 
 namespace FIAP.Contacts.Infrastructure.Contacts.Repositories
 {
@@ -16,14 +15,16 @@ namespace FIAP.Contacts.Infrastructure.Contacts.Repositories
 
         }
 
-        //TODO 
-        //Change the query to filter by the PhoneNumber Code field
-        //public Task<IEnumerable<Contact>> FilterByPhoneCode(PhoneNumber phoneNumber)
-        //{
-        //    var sql = "SELECT * FROM Contacts WHERE phoneNumber = @PhoneNumber";
+        public async Task<List<Contact>> GetByPhoneCode(int phoneCode)
+        {
+            var sql = "SELECT * FROM Contacts WHERE phoneCode = @PhoneCode";
 
-        //    return DbConnection.QueryAsync<Contact>(sql, new { PhoneNumber = phoneNumber }));    
-        //}
+            var result = await DbConnection.QueryAsync<Contact>(sql, new { PhoneCode = phoneCode });
+
+            //var entity = _entity.Where(x => x.PhoneNumber.Code.Equals(phoneCode)).ToList();
+
+            return result.ToList();
+        }
 
         public Task<Contact?> GetByEmailOrPhoneNumber(Email email, PhoneNumber phoneNumber)
         {

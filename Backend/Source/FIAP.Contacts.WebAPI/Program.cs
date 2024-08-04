@@ -58,11 +58,19 @@ endpointGroup.MapDelete("/contacts/{contactId:guid}", async (Guid contactId, ICo
 .WithName("Delete Contact");
 
 
-//endpointGroup.MapGet("/contacts", async (IContactAppService contactService) =>
-//    await contactService.GetAll().WithName("GetContacts"));
+endpointGroup.MapGet("/contacts", async (IContactAppService contactService) =>
+{
+    var result = await contactService.GetAllAsync();
+    return Results.Ok(result);
 
-//endpointGroup.MapGet("/contacts/{id}", async (Guid contactId, IContactAppService contactService) =>
-//    await contactService.Get(contactId).WithName("GetContact"));
+}).WithTags("Contacts").WithName("Get All Contacts");
+
+endpointGroup.MapGet("/contacts/{phoneCode:int}", async (int phoneCode, IContactAppService contactService) =>
+{
+    var result = await contactService.GetByPhoneCodeAsync(phoneCode);
+    return Results.Ok(result);
+
+}).WithTags("Contacts").WithName("Get Contact By Phone Code");
 
 
 app.UseContactsExceptionFilter();

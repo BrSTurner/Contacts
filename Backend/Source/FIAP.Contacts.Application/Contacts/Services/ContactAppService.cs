@@ -29,6 +29,18 @@ namespace FIAP.Contacts.Application.Contacts.Services
             return await _contactService.CreateAsync(_mapper.Map<Contact>(contact));
         }
 
+        public async Task<List<ContactDTO>> GetAllAsync()
+        {
+            var contacts = await _contactService.GetAllAsync();
+            return _mapper.Map<List<ContactDTO>>(contacts);
+        }
+
+        public async Task<List<ContactDTO>> GetByPhoneCodeAsync(int phoneCode)
+        {
+            var contacts = await _contactService.GetByPhoneCodeAsync(phoneCode);
+            return _mapper.Map<List<ContactDTO>>(contacts);
+        }
+
         public async Task<ContactDTO> UpdateAsync(Guid contactId, UpdateContactInput contact)
         {
             EnsureContactInputIsValid(contact);
