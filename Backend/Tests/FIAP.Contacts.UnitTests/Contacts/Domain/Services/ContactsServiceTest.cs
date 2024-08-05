@@ -1,6 +1,11 @@
-﻿using FIAP.Contacts.Domain.Contacts.Entities;
+﻿using AutoMapper;
+using FIAP.Contacts.Application.Contacts.Models;
+using FIAP.Contacts.Application.Contacts.Queries;
+using FIAP.Contacts.Application.Contacts.Services;
+using FIAP.Contacts.Domain.Contacts.Entities;
 using FIAP.Contacts.Domain.Contacts.Repositories;
 using FIAP.Contacts.Domain.Contacts.Services;
+using FIAP.Contacts.SharedKernel.DomainObjects;
 using FIAP.Contacts.SharedKernel.Exceptions;
 using FIAP.Contacts.SharedKernel.UoW;
 using Moq;
@@ -10,12 +15,18 @@ namespace FIAP.Contacts.UnitTests.Contacts.Domain.Services
     public class ContactsServiceTest : IAsyncLifetime
     {
         private Mock<IContactRepository> ContactRepository { get; set; }
+        private Mock<IContactService> ContactService { get; set; }
+        private Mock<IContactQueries> ContactQueries { get; set; }
+        private Mock<IMapper> Mapper { get; set; }
         private Mock<IUnitOfWork> UnitOfWork { get; set; }
 
         public Task InitializeAsync()
         {
             ContactRepository = new Mock<IContactRepository>();
             UnitOfWork = new Mock<IUnitOfWork>();
+            ContactQueries = new Mock<IContactQueries>();
+            ContactService = new Mock<IContactService>();
+            Mapper = new Mock<IMapper>();
             return Task.CompletedTask;
         }
 
@@ -100,8 +111,110 @@ namespace FIAP.Contacts.UnitTests.Contacts.Domain.Services
             Assert.Equal("Contact could not be deleted", exception.Message);
         }
 
+        [Fact(DisplayName = "Should Return All Contacts")]
+        [Trait("Category", "GetAll")]
+        public async Task Should_Return_All_Contacts()
+        {
+            // Arrange
+            var contacts = ContactMock.ContactFaker.Generate(2, ContactMock.VALID_ENTITY);
+
+            ContactRepository
+                .Setup(x => x.GetAllAsync())
+                .ReturnsAsync(contacts);
+
+            var service = GetContactService();
+
+            // Act
+            var result = await service.GetAllAsync();
+
+            // Assert
+            Assert.NotNull(result);
+            Assert.Equal(2, result.Count);
+            foreach (var contact in contacts)
+            {
+                Assert.Contains(result, c => c.Id == contact.Id);
+            }
+        }
+
+
+        [Fact(DisplayName = "Should Return Empty List When No Contacts Exist")]
+        [Trait("Category", "GetAll")]
+        public async Task Should_Return_Empty_List_When_No_Contacts_Exist()
+        {
+            // Arrange
+            var emptyContacts = new List<Contact>();
+
+            ContactRepository
+                .Setup(x => x.GetAllAsync())
+                .ReturnsAsync(emptyContacts);
+
+            var service = GetContactService();
+
+            // Act
+            var result = await service.GetAllAsync();
+
+            // Assert
+            Assert.NotNull(result);
+            Assert.Empty(result);
+        }
+
+
+        [Fact(DisplayName = "Should Return Empty List When No Contacts Match PhoneCode")]
+        [Trait("Category", "GetByPhoneCode")]
+        public async Task Should_Return_Empty_List_When_No_Contacts_Match_PhoneCode()
+        {
+            // Arrange
+            var emptyContacts = new List<ContactDTO>();
+
+            ContactQueries
+                .Setup(x => x.GetByPhoneCodeAsync(It.IsAny<int>()))
+                .ReturnsAsync(emptyContacts);
+
+            var service = GetContactAppService();
+
+            // Act
+            var result = await service.GetByPhoneCodeAsync(11);
+
+            // Assert
+            Assert.NotNull(result);
+            Assert.Empty(result);
+        }
+
+        [Fact(DisplayName = "Should Contacts That Match PhoneCode")]
+        [Trait("Category", "GetByPhoneCode")]
+        public async Task Should_Contacts_That_Match_PhoneCode()
+        {
+            // Arrange
+            var phonecode = 11;
+            var contacts = ContactMock.ContactDTOFaker
+                .Generate(5, ContactMock.VALID_ENTITY);
+
+            var contactWithSpecificPhoneCode = ContactMock.ContactWithSpecificPhoneCodeDTOFaker
+                .Generate(ContactMock.VALID_ENTITY);
+
+            contacts.Add(contactWithSpecificPhoneCode);
+
+            ContactQueries
+                .Setup(x => x.GetByPhoneCodeAsync(phonecode))
+                .ReturnsAsync(contacts.Where(c => c.PhoneCode == phonecode).ToList());
+
+            var service = GetContactAppService();
+
+            // Act
+            var result = await service.GetByPhoneCodeAsync(phonecode);
+
+            // Assert
+            Assert.NotNull(result);
+            Assert.All(result, c => Assert.Equal(phonecode, c.PhoneCode));
+            Assert.Single(result);
+        }
+
+
 
         private ContactService GetContactService() 
             => new ContactService(ContactRepository.Object, UnitOfWork.Object);
+
+        private ContactAppService GetContactAppService()
+            => new ContactAppService(ContactService.Object, Mapper.Object, ContactQueries.Object);
     }
 }
