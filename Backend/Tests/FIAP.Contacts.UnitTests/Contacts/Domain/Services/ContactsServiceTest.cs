@@ -189,8 +189,8 @@ namespace FIAP.Contacts.UnitTests.Contacts.Domain.Services
             var contacts = ContactMock.ContactDTOFaker
                 .Generate(5, ContactMock.VALID_ENTITY);
 
-            var contactWithSpecificPhoneCode = ContactMock.ContactWithSpecificPhoneCodeDTOFaker
-                .Generate(ContactMock.VALID_ENTITY);
+            var contactWithSpecificPhoneCode = ContactMock.ContactDTOFaker
+                .Generate(ContactMock.VALID_SPECIFIC_PHONECODE_ENTITY);
 
             contacts.Add(contactWithSpecificPhoneCode);
 
