@@ -39,7 +39,7 @@ namespace FIAP.Contacts.UnitTests
                     .RuleFor(c => c.Name, f => f.Name.FullName())
                     .RuleFor(c => c.Email, f => f.Internet.Email())
                     .RuleFor(c => c.PhoneNumber, f => f.Random.Number(900000000, 999999999).ToString())
-                    .RuleFor(c => c.PhoneCode, f => 11);
+                    .RuleFor(c => c.PhoneCode, f => SPECIFIC_PHONE_CODE);
             });           
     }
 }

@@ -1,11 +1,12 @@
-﻿using AutoMapper;
+﻿#pragma warning disable CS8603
+#pragma warning disable CS8604
+using AutoMapper;
 using FIAP.Contacts.Application.Contacts.Models;
 using FIAP.Contacts.Application.Contacts.Queries;
 using FIAP.Contacts.Application.Contacts.Services;
 using FIAP.Contacts.Domain.Contacts.Entities;
 using FIAP.Contacts.Domain.Contacts.Repositories;
 using FIAP.Contacts.Domain.Contacts.Services;
-using FIAP.Contacts.SharedKernel.DomainObjects;
 using FIAP.Contacts.SharedKernel.Exceptions;
 using FIAP.Contacts.SharedKernel.UoW;
 using Moq;
@@ -31,7 +32,167 @@ namespace FIAP.Contacts.UnitTests.Contacts.Domain.Services
         }
 
         public Task DisposeAsync() => Task.CompletedTask;
-        
+
+        #region CREATE CONTACT TESTS
+
+        [Fact(DisplayName = "Should Not Create And Throw Domain Exception")]
+        [Trait("Category", "Create")]
+        public async Task Should_Not_Create_And_Throw_Domain_Exception()
+        {
+            //Arrange
+            var contact = ContactMock
+                .ContactFaker
+                .Generate(ContactMock.VALID_ENTITY);
+
+            UnitOfWork
+                .Setup(x => x.CommitAsync())
+                .ReturnsAsync(false);
+
+            var service = GetContactService();
+
+            //Act && Assert
+            var exception = await Assert.ThrowsAsync<DomainException>(() => service.CreateAsync(contact));
+            Assert.Equal("Contact could not be created", exception.Message);
+        }
+
+        [Fact(DisplayName = "Should Create Contact")]
+        [Trait("Category", "Create")]
+        public async Task Should_Create_Contact_And_Return_Guid()
+        {
+            //Arrange
+            var contact = ContactMock
+                .ContactFaker
+                .Generate(ContactMock.VALID_ENTITY);
+
+            UnitOfWork
+                .Setup(x => x.CommitAsync())
+                .ReturnsAsync(true);
+
+            var service = GetContactService();
+
+            //Act
+            var result =  await service.CreateAsync(contact);           
+
+            //Assert
+            Assert.NotEqual(Guid.Empty, result);
+            ContactRepository.Verify(rep => rep.Add(contact), Times.Once);
+        }
+
+        [Fact(DisplayName = "Should Throw Contact Already Registered")]
+        [Trait("Category", "Create")]
+        public async Task Should_Throw_Contact_Already_Registered()
+        {
+            //Arrange
+            var contact = ContactMock
+                .ContactFaker
+                .Generate(ContactMock.VALID_ENTITY);
+
+            ContactRepository
+                .Setup(x => x.GetByEmailOrPhoneNumber(contact.Email, contact.PhoneNumber))
+                .ReturnsAsync(contact);
+
+            var service = GetContactService();
+
+            //Act && Assert
+            var exception = await Assert.ThrowsAsync<ExistingContactException>(() => service.CreateAsync(contact));
+            Assert.Equal("A contact with same E-mail or Phone Number already exists", exception.Message);
+        }
+
+        #endregion
+
+        #region UPDATE CONTACT TESTS
+
+        [Fact(DisplayName = "Should Update Contact")]
+        [Trait("Category", "Update")]
+        public async Task Should_Update_Contact()
+        {
+            //Arrange
+            var contact = ContactMock
+                .ContactFaker
+                .Generate(ContactMock.VALID_ENTITY);
+
+            var modifiedContact = ContactMock
+                .ContactFaker
+                .Generate(ContactMock.VALID_ENTITY);
+
+            ContactRepository
+                .Setup(x => x.GetByIdAsync(contact.Id))
+                .ReturnsAsync(contact);
+
+            UnitOfWork
+                .Setup(x => x.CommitAsync())
+                .ReturnsAsync(true);
+
+            var service = GetContactService();
+
+            //Act
+            var updatedContact = await service.UpdateAsync(contact.Id, modifiedContact);
+
+            //Assert            
+            ContactRepository.Verify(rep => rep.GetByIdAsync(contact.Id), Times.Once);
+            UnitOfWork.Verify(unit => unit.CommitAsync(), Times.Once);
+            Assert.NotNull(updatedContact);
+            Assert.Equal(contact.Name, modifiedContact.Name);
+            Assert.True(contact.Email.Equals(modifiedContact.Email));
+            Assert.True(contact.PhoneNumber.Equals(modifiedContact.PhoneNumber));
+        }
+
+
+        [Fact(DisplayName = "Should Not Find Entity on Update and Throw Exception")]
+        [Trait("Category", "Update")]
+        public async Task Should_Not_Update_Contact_And_Throw_Not_Found()
+        {
+            //Arrange
+            var contact = ContactMock
+                .ContactFaker
+                .Generate(ContactMock.VALID_ENTITY);
+
+            var modifiedContact = ContactMock
+                .ContactFaker
+                .Generate(ContactMock.VALID_ENTITY);
+
+            ContactRepository
+                .Setup(x => x.GetByIdAsync(contact.Id))
+                .Returns<Contact>(null);
+
+            var service = GetContactService();
+
+            //Act && Assert
+            var exception = await Assert.ThrowsAsync<EntityNotFoundException>(() => service.UpdateAsync(contact.Id, modifiedContact));
+            Assert.Equal("Contact could not be found", exception.Message);
+        }
+
+        [Fact(DisplayName = "Should Not Update and Throw Domain Exception")]
+        [Trait("Category", "Update")]
+        public async Task Should_Not_Update_Contact_And_Throw_Domain_Exception()
+        {
+            //Arrange
+            var contact = ContactMock
+                .ContactFaker
+                .Generate(ContactMock.VALID_ENTITY);
+
+            var modifiedContact = ContactMock
+                .ContactFaker
+                .Generate(ContactMock.VALID_ENTITY);
+
+            ContactRepository
+                .Setup(x => x.GetByIdAsync(contact.Id))
+                .ReturnsAsync(contact);
+
+            UnitOfWork
+                .Setup(x => x.CommitAsync())
+                .ReturnsAsync(false);
+
+            var service = GetContactService();
+
+            //Act && Assert
+            var exception = await Assert.ThrowsAsync<DomainException>(() => service.UpdateAsync(contact.Id, modifiedContact));
+            Assert.Equal("Contact could not be updated", exception.Message);
+        }
+
+        #endregion
+
+        #region DELETE CONTACT TESTS
 
         [Fact(DisplayName = "Should Delete")]
         [Trait("Category", "Delete")]
@@ -110,7 +271,9 @@ namespace FIAP.Contacts.UnitTests.Contacts.Domain.Services
             var exception = await Assert.ThrowsAsync<DomainException>(() => service.DeleteAsync(contact.Id));
             Assert.Equal("Contact could not be deleted", exception.Message);
         }
+        #endregion
 
+        #region GET CONTACT TESTS
         [Fact(DisplayName = "Should Return All Contacts")]
         [Trait("Category", "GetAll")]
         public async Task Should_Return_All_Contacts()
@@ -173,7 +336,7 @@ namespace FIAP.Contacts.UnitTests.Contacts.Domain.Services
             var service = GetContactAppService();
 
             // Act
-            var result = await service.GetByPhoneCodeAsync(11);
+            var result = await service.GetByPhoneCodeAsync(ContactMock.SPECIFIC_PHONE_CODE);
 
             // Assert
             Assert.NotNull(result);
@@ -185,7 +348,7 @@ namespace FIAP.Contacts.UnitTests.Contacts.Domain.Services
         public async Task Should_Contacts_That_Match_PhoneCode()
         {
             // Arrange
-            var phonecode = 11;
+            var phonecode = ContactMock.SPECIFIC_PHONE_CODE;
             var contacts = ContactMock.ContactDTOFaker
                 .Generate(5, ContactMock.VALID_ENTITY);
 
@@ -208,8 +371,7 @@ namespace FIAP.Contacts.UnitTests.Contacts.Domain.Services
             Assert.All(result, c => Assert.Equal(phonecode, c.PhoneCode));
             Assert.Single(result);
         }
-
-
+        #endregion
 
         private ContactService GetContactService() 
             => new ContactService(ContactRepository.Object, UnitOfWork.Object);
