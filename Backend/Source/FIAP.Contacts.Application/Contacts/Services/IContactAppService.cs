@@ -7,5 +7,8 @@ namespace FIAP.Contacts.Application.Contacts.Services
         Task<Guid> CreateAsync(CreateContactInput contact);
         Task<ContactDTO> UpdateAsync(Guid contactId, UpdateContactInput contact);
         Task<bool> DeleteAsync(Guid contactId);
+        Task<List<ContactDTO>> GetAllAsync();
+        Task<List<ContactDTO>> GetByPhoneCodeAsync(int phoneCode);
+
     }
 }
