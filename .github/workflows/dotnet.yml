@@ -15,7 +15,7 @@ jobs:
     runs-on: ubuntu-latest
     
     env:
-      SOLUTION_NAME: /Backend/FIAP.Contacts.sln
+      SOLUTION_NAME: Backend/FIAP.Contacts.sln
       
     steps:
     - uses: actions/checkout@v4
@@ -23,8 +23,6 @@ jobs:
       uses: actions/setup-dotnet@v4
       with:
         dotnet-version: 8.0.x
-    - name: List files for debugging
-      run: ls -la
     - name: Restore dependencies
       run: dotnet restore ${{ env.SOLUTION_NAME }}
     - name: Build
