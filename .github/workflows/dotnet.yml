@@ -13,7 +13,10 @@ jobs:
   build:
 
     runs-on: ubuntu-latest
-
+    
+    env:
+      SOLUTION_NAME: FIAP.Contacts.sln
+      
     steps:
     - uses: actions/checkout@v4
     - name: Setup .NET
@@ -21,8 +24,8 @@ jobs:
       with:
         dotnet-version: 8.0.x
     - name: Restore dependencies
-      run: dotnet restore
+      run: dotnet restore ${{ env.SOLUTION_NAME }}
     - name: Build
-      run: dotnet build --no-restore
+      run: dotnet build ${{ env.SOLUTION_NAME }} --no-restore
     - name: Test
-      run: dotnet test --no-build --verbosity normal
+      run: dotnet test ${{ env.SOLUTION_NAME }} --no-build --verbosity normal
