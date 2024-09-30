@@ -36,7 +36,7 @@ namespace FIAP.Contacts.UnitTests.Contacts.Domain.Services
         #region CREATE CONTACT TESTS
 
         [Fact(DisplayName = "Should Not Create And Throw Domain Exception")]
-        [Trait("Category", "Create")]
+        [Trait("Unit", "Create")]
         public async Task Should_Not_Create_And_Throw_Domain_Exception()
         {
             //Arrange
@@ -56,7 +56,7 @@ namespace FIAP.Contacts.UnitTests.Contacts.Domain.Services
         }
 
         [Fact(DisplayName = "Should Create Contact")]
-        [Trait("Category", "Create")]
+        [Trait("Unit", "Create")]
         public async Task Should_Create_Contact_And_Return_Guid()
         {
             //Arrange
@@ -79,7 +79,7 @@ namespace FIAP.Contacts.UnitTests.Contacts.Domain.Services
         }
 
         [Fact(DisplayName = "Should Throw Contact Already Registered")]
-        [Trait("Category", "Create")]
+        [Trait("Unit", "Create")]
         public async Task Should_Throw_Contact_Already_Registered()
         {
             //Arrange
@@ -103,7 +103,7 @@ namespace FIAP.Contacts.UnitTests.Contacts.Domain.Services
         #region UPDATE CONTACT TESTS
 
         [Fact(DisplayName = "Should Update Contact")]
-        [Trait("Category", "Update")]
+        [Trait("Unit", "Update")]
         public async Task Should_Update_Contact()
         {
             //Arrange
@@ -139,7 +139,7 @@ namespace FIAP.Contacts.UnitTests.Contacts.Domain.Services
 
 
         [Fact(DisplayName = "Should Not Find Entity on Update and Throw Exception")]
-        [Trait("Category", "Update")]
+        [Trait("Unit", "Update")]
         public async Task Should_Not_Update_Contact_And_Throw_Not_Found()
         {
             //Arrange
@@ -163,7 +163,7 @@ namespace FIAP.Contacts.UnitTests.Contacts.Domain.Services
         }
 
         [Fact(DisplayName = "Should Not Update and Throw Domain Exception")]
-        [Trait("Category", "Update")]
+        [Trait("Unit", "Update")]
         public async Task Should_Not_Update_Contact_And_Throw_Domain_Exception()
         {
             //Arrange
@@ -195,7 +195,7 @@ namespace FIAP.Contacts.UnitTests.Contacts.Domain.Services
         #region DELETE CONTACT TESTS
 
         [Fact(DisplayName = "Should Delete")]
-        [Trait("Category", "Delete")]
+        [Trait("Unit", "Delete")]
         public async Task Should_Delete_Contact()
         {
             //Arrange
@@ -221,7 +221,7 @@ namespace FIAP.Contacts.UnitTests.Contacts.Domain.Services
         }
 
         [Fact(DisplayName = "Should Not Delete and Throw Entity Not Found")]
-        [Trait("Category", "Delete")]
+        [Trait("Unit", "Delete")]
         public async Task Should_NotDelete_And_Throw_EntityNotFound()
         {
             //Arrange      
@@ -237,7 +237,7 @@ namespace FIAP.Contacts.UnitTests.Contacts.Domain.Services
         }
 
         [Fact(DisplayName = "Should Not Delete and Throw Argument Null")]
-        [Trait("Category", "Delete")]
+        [Trait("Unit", "Delete")]
         public async Task Should_NotDelete_And_Throw_ArgumentNull()
         {
             //Arrange      
@@ -249,7 +249,7 @@ namespace FIAP.Contacts.UnitTests.Contacts.Domain.Services
         }
 
         [Fact(DisplayName = "Should Not Delete and Throw Domain Exception")]
-        [Trait("Category", "Delete")]
+        [Trait("Unit", "Delete")]
         public async Task Should_NotDelete_And_Throw_DomainException()
         {
             //Arrange      
@@ -275,7 +275,7 @@ namespace FIAP.Contacts.UnitTests.Contacts.Domain.Services
 
         #region GET CONTACT TESTS
         [Fact(DisplayName = "Should Return All Contacts")]
-        [Trait("Category", "GetAll")]
+        [Trait("Unit", "GetAll")]
         public async Task Should_Return_All_Contacts()
         {
             // Arrange
@@ -301,7 +301,7 @@ namespace FIAP.Contacts.UnitTests.Contacts.Domain.Services
 
 
         [Fact(DisplayName = "Should Return Empty List When No Contacts Exist")]
-        [Trait("Category", "GetAll")]
+        [Trait("Unit", "GetAll")]
         public async Task Should_Return_Empty_List_When_No_Contacts_Exist()
         {
             // Arrange
@@ -323,7 +323,7 @@ namespace FIAP.Contacts.UnitTests.Contacts.Domain.Services
 
 
         [Fact(DisplayName = "Should Return Empty List When No Contacts Match PhoneCode")]
-        [Trait("Category", "GetByPhoneCode")]
+        [Trait("Unit", "GetByPhoneCode")]
         public async Task Should_Return_Empty_List_When_No_Contacts_Match_PhoneCode()
         {
             // Arrange
@@ -344,7 +344,7 @@ namespace FIAP.Contacts.UnitTests.Contacts.Domain.Services
         }
 
         [Fact(DisplayName = "Should Contacts That Match PhoneCode")]
-        [Trait("Category", "GetByPhoneCode")]
+        [Trait("Unit", "GetByPhoneCode")]
         public async Task Should_Contacts_That_Match_PhoneCode()
         {
             // Arrange
