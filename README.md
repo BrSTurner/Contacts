@@ -2,6 +2,8 @@
 ![Logo](https://sunsetti.com.br/wp-content/uploads/2020/08/06-parceiros-logo-fiap.png) 
 # Contatos
 
+[![Build and Test](https://github.com/BrSTurner/Contacts/actions/workflows/dotnet.yml/badge.svg)](https://github.com/BrSTurner/Contacts/actions/workflows/dotnet.yml)
+
 Projeto desenvolvido em .NET 8 - Clean Architecture
 -------------------------
 - Repository Pattern
