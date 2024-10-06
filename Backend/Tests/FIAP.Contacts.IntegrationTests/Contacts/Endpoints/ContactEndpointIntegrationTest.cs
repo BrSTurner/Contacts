@@ -101,9 +101,11 @@ namespace FIAP.Contacts.IntegrationTests.Contacts.Endpoints
             Assert.Equal(contactFromDatabase.PhoneNumber.Number, newContact.PhoneNumber.Number);
         }
 
-        [Fact(DisplayName = "Update Contact")]
+        [Theory(DisplayName = "Update Contact")]
         [Trait("Integration", "Update")]
-        public async Task Should_Update_Contact_Returns_Ok()
+        [InlineData("Bruno S1lv4")]
+        [InlineData("Gustavo Koz0noe")]
+        public async Task Should_Update_Contact_Returns_Ok(string expectedName)
         {
             //Arrange
             var client = _fixture.Client;
@@ -113,7 +115,6 @@ namespace FIAP.Contacts.IntegrationTests.Contacts.Endpoints
 
             await _fixture.InsertContactsInDatabase(contactToUpdate);
 
-            var expectedName = "Bruno S1lv4";
             var input = new UpdateContactInput {
                 Name = expectedName,
                 Email = contactToUpdate.Email.Address,
