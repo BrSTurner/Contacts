@@ -36,6 +36,23 @@ namespace FIAP.Contacts.IntegrationTests.Contacts.Endpoints
             Assert.Equal(contactsInDbAmount, contacts.Count);
         }
 
+        [Fact(DisplayName = "Should Not Get All Contacts")]
+        [Trait("Integration", "Get")]
+        public async Task Get_No_Contacts_Returns_No_Content()
+        {
+            //Arrange
+            await _fixture.ClearDatabase();
+            var client = _fixture.Client;
+
+            //Act
+            var response = await client.GetAsync("/api/contacts");
+
+            //Assert
+            response.EnsureSuccessStatusCode();
+
+            Assert.Equal(HttpStatusCode.NoContent, response.StatusCode);
+        }
+
         [Theory(DisplayName = "Get Contact By Phone Code")]
         [Trait("Integration", "Get")]        
         [InlineData(11)]
@@ -64,6 +81,23 @@ namespace FIAP.Contacts.IntegrationTests.Contacts.Endpoints
             Assert.NotNull(contacts);
             Assert.NotNull(contacts.FirstOrDefault(x => x.Id == contactInDatabase.Id));
             Assert.True(contacts.All(x => x.PhoneCode == phoneCode));
+        }
+
+        [Fact(DisplayName = "Shoudl Not Get Contact By Phone Code ")]
+        [Trait("Integration", "Get")]
+        public async Task Get_Contact_By_PhoneCode_Returns_No_Content()
+        {
+            //Arrange
+            var client = _fixture.Client;
+            await _fixture.ClearDatabase();
+
+            //Act
+            var response = await client.GetAsync($"/api/contacts/11");
+
+            //Assert
+            response.EnsureSuccessStatusCode();
+
+            Assert.Equal(HttpStatusCode.NoContent, response.StatusCode);
         }
 
         [Fact(DisplayName = "Create New Contact")]

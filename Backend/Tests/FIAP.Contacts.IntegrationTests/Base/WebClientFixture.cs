@@ -1,7 +1,7 @@
 ﻿using Dapper;
 using FIAP.Contacts.Domain.Contacts.Entities;
 using FIAP.Contacts.Infrastructure.Context;
-using FIAP.Contacts.IntegrationTests.Dapper;
+using FIAP.Contacts.IntegrationTests.Database.Dapper;
 using FIAP.Contacts.IntegrationTests.Mock;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Data.Sqlite;
@@ -102,6 +102,17 @@ namespace FIAP.Contacts.IntegrationTests.Base
             {
                 var db = scope.ServiceProvider.GetRequiredService<FIAPContext>();
                 return await db.Set<Contact>().FirstOrDefaultAsync(x => x.Id == id);
+            }
+        }
+
+        public async Task ClearDatabase()
+        {
+            using (var scope = ScopeFactory.CreateScope())
+            {
+                var db = scope.ServiceProvider.GetRequiredService<FIAPContext>();
+                var allContacts = db.Set<Contact>().ToList();
+                db.Set<Contact>().RemoveRange(allContacts); 
+                db.SaveChanges();
             }
         }
 

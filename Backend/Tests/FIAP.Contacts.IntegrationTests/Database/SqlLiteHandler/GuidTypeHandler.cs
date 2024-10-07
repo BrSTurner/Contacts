@@ -1,7 +1,7 @@
 ﻿using Dapper;
 using System.Data;
 
-namespace FIAP.Contacts.IntegrationTests.Dapper
+namespace FIAP.Contacts.IntegrationTests.Database.Dapper
 {
     public class GuidTypeHandler : SqlMapper.TypeHandler<Guid>
     {

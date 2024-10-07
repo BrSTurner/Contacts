@@ -27,6 +27,8 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
+app.UseContactsExceptionFilter();
+
 var endpointGroup = app
     .MapGroup("api/contacts");
 
@@ -97,7 +99,7 @@ endpointGroup.MapGet("/{phoneCode:int}", async (int phoneCode, IContactAppServic
 .Produces<NoContent>();
 
 
-app.UseContactsExceptionFilter();
+
 
 app.Run();
 
