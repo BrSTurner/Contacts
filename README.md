@@ -79,5 +79,6 @@ Update-Database
 | FIAP.Contacts.Domain | Contém a lógica de negócio central do sistema, incluindo entidades de domínio, repositórios e serviços de domínio.|
 | FIAP.Contacts.Infrastructure | Contém a implementação da infraestrutura, como contexto de banco de dados, migrações, repositórios e extensões. Esta camada depende do domínio, mas o domínio não depende da infraestrutura. |
 | FIAP.Contacts.UnitTests | Contém os testes unitários para garantir que cada componente do sistema funcione conforme esperado. |
+| FIAP.Contacts.IntegrationTests | Contém os testes de integração para garantir que os componentes do sistema estão interagindo entre si como o esperado. |
 
 Essa estrutura promove a separação de preocupações, facilitando a manutenção, testes e evolução do sistema.
