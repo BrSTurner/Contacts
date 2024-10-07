@@ -351,6 +351,13 @@ namespace FIAP.Contacts.UnitTests.Contacts.Domain.Services
             var phonecode = ContactMock.SPECIFIC_PHONE_CODE;
             var contacts = ContactMock.ContactDTOFaker
                 .Generate(5, ContactMock.VALID_ENTITY);
+            
+            contacts = contacts.Select(x =>
+            {
+                x.PhoneCode = 21;
+                return x;
+            })
+            .ToList();
 
             var contactWithSpecificPhoneCode = ContactMock.ContactDTOFaker
                 .Generate(ContactMock.VALID_SPECIFIC_PHONECODE_ENTITY);
