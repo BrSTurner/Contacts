@@ -36,5 +36,6 @@ namespace FIAP.Contacts.IntegrationTests.Mock
                 .RuleFor(c => c.CreatedAt, f => f.Date.Recent());
             });
         }
+
     }
 }
