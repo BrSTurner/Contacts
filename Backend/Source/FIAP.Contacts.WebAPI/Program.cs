@@ -5,8 +5,8 @@ using FIAP.Contacts.Application.Extensions;
 using FIAP.Contacts.Domain.Contacts.Services;
 using FIAP.Contacts.Infrastructure.Extensions;
 using FIAP.Contacts.WebAPI.Filters;
-using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Http.HttpResults;
+using Prometheus;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -27,6 +27,13 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+app.UseHttpMetrics();
+
+app.UseRouting();
+
+app.UseContactsExceptionFilter();
+
+app.UseEndpoints(endpoints => endpoints.MapMetrics());
 
 var endpointGroup = app
     .MapGroup("Contacts");
@@ -96,8 +103,5 @@ endpointGroup.MapGet("/contacts/{phoneCode:int}", async (int phoneCode, IContact
 .WithName("Get Contact By Phone Code")
 .Produces<Ok>()
 .Produces<NoContent>();
-
-
-app.UseContactsExceptionFilter();
 
 app.Run();
