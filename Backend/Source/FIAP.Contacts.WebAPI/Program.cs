@@ -36,9 +36,9 @@ app.UseContactsExceptionFilter();
 app.UseEndpoints(endpoints => endpoints.MapMetrics());
 
 var endpointGroup = app
-    .MapGroup("Contacts");
+    .MapGroup("api/contacts");
 
-endpointGroup.MapPost("/contacts", async (CreateContactInput contact, IContactAppService contactService) =>
+endpointGroup.MapPost(string.Empty, async (CreateContactInput contact, IContactAppService contactService) =>
 {
     var contactId = await contactService.CreateAsync(contact);
     return Results.Created($"/{contactId}", contactId);
@@ -49,7 +49,7 @@ endpointGroup.MapPost("/contacts", async (CreateContactInput contact, IContactAp
 .Produces<Created<Guid>>()
 .Produces<BadRequest>();
 
-endpointGroup.MapPut("/contacts/{contactId:guid}", async (Guid contactId, UpdateContactInput contact, IContactAppService contactService) =>
+endpointGroup.MapPut("/{contactId:guid}", async (Guid contactId, UpdateContactInput contact, IContactAppService contactService) =>
 {
     var updatedContact = await contactService.UpdateAsync(contactId, contact);
     return Results.Ok(updatedContact);
@@ -61,7 +61,7 @@ endpointGroup.MapPut("/contacts/{contactId:guid}", async (Guid contactId, Update
 .Produces<NotFound>()
 .Produces<BadRequest>();
 
-endpointGroup.MapDelete("/contacts/{contactId:guid}", async (Guid contactId, IContactAppService contactService) =>
+endpointGroup.MapDelete("/{contactId:guid}", async (Guid contactId, IContactAppService contactService) =>
 {
     var result = await contactService.DeleteAsync(contactId);
     return Results.Ok(result);
@@ -74,7 +74,7 @@ endpointGroup.MapDelete("/contacts/{contactId:guid}", async (Guid contactId, ICo
 .Produces<BadRequest>();
 
 
-endpointGroup.MapGet("/contacts", async (IContactAppService contactService) =>
+endpointGroup.MapGet(string.Empty, async (IContactAppService contactService) =>
 {
     var result = await contactService.GetAllAsync();
     
@@ -89,7 +89,7 @@ endpointGroup.MapGet("/contacts", async (IContactAppService contactService) =>
 .Produces<Ok>()
 .Produces<NoContent>();
 
-endpointGroup.MapGet("/contacts/{phoneCode:int}", async (int phoneCode, IContactAppService contactService) =>
+endpointGroup.MapGet("/{phoneCode:int}", async (int phoneCode, IContactAppService contactService) =>
 {
     var result = await contactService.GetByPhoneCodeAsync(phoneCode);
 
@@ -104,4 +104,9 @@ endpointGroup.MapGet("/contacts/{phoneCode:int}", async (int phoneCode, IContact
 .Produces<Ok>()
 .Produces<NoContent>();
 
+
+
+
 app.Run();
+
+public partial class Program { }
